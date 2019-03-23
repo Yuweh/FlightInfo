@@ -30,9 +30,35 @@ class ViewController: UIViewController {
         ) {
         //TODO: Create a crossfade animation for the background
         
+        //Create and set up temp view
+        let tempView = UIImageView(frame: bgImageView.frame)
+        tempView.image = toImage
+        tempView.alpha = 0.0
+        tempView.center.y += 20
+        tempView.bounds.size.width = bgImageView.bounds.width * 1.3
+        bgImageView.superview?.insertSubview(tempView, aboveSubview: bgImageView)
         
-        
+        UIView.animate(withDuration: 0.5,
+                       animations: {
+                         //Fade temp view in
+                        tempView.alpha = 1.0
+                        tempView.center.y -= 20
+                        tempView.bounds.size = self.bgImageView.bounds.size
+        }) {_ in
+            //Remove temp view and update background view
+            self.bgImageView.image = toImage
+            tempView.removeFromSuperview()
+        }
+       
         //TODO: Create a fade animation for snowView
+        UIView.animate(withDuration: 1.0,
+                       delay: 0.0,
+                       options: .curveEaseOut,
+            animations: {
+                self.snowView.alpha = showEffects ? 1.0 : 00.0
+        },
+            completion: nil)
+        
     }
     
     func moveLabel() {
@@ -71,9 +97,11 @@ class ViewController: UIViewController {
         
         if animated {
             //TODO: Call your animation
+            fade(toImage: UIImage(named: data.weatherImageName)!,
+                 showEffects: data.showWeatherEffects)
             
         } else {
-            
+            bgImageView.image = UIImage(named: data.weatherImageName)
         }
         
         // schedule next flight
