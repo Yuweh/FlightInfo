@@ -130,6 +130,14 @@ class ViewController: UIViewController {
             // pass animating properties here to change label
             let offset = CGPoint(x: -80.0, y: 0.0)
             moveLabel(label: arrivingTo, text: data.arrivingTo, offset: offset)
+            
+            //TODO: Add Variety to Animating Properties
+            let offsetArriving = CGPoint(x: 0.0, y: data.showWeatherEffects ? 50.0 : -50.0)
+            moveLabel(label: arrivingTo, text: data.arrivingTo, offset: offsetArriving)
+            
+            let offsetDeparting = CGPoint(x: data.showWeatherEffects ? 80.0 : -80.0, y: 0.0)
+            moveLabel(label: departingFrom, text: data.departingFrom, offset: offsetDeparting)
+            
         } else {
             bgImageView.image = UIImage(named: data.weatherImageName)
             snowView.isHidden = !data.showWeatherEffects
