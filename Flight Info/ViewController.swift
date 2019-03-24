@@ -166,6 +166,15 @@ class ViewController: UIViewController {
     func changeSummary(to summaryText: String) {
         //TODO: Animate the summary text
         
+        UIView.animateKeyframes(withDuration: 1.0, delay: 0.0, options: [], animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.45, animations: {
+                self.summary.center.y -= 100.0
+            })
+            UIView.addKeyframe(withRelativeStartTime: 0/5, relativeDuration: 0.45, animations: {
+                self.summary.center.y += 100.0
+            })
+        }, completion: nil)
+        
         delay(seconds: 0.5) {
             self.summary.text = summaryText
         }
@@ -207,6 +216,7 @@ class ViewController: UIViewController {
             cubeTransition(label: gateNr, text: data.gateNr)
             
             planeDepart()
+            changeSummary(to: data.summary)
             
         } else {
             bgImageView.image = UIImage(named: data.weatherImageName)
