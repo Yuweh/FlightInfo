@@ -61,8 +61,35 @@ class ViewController: UIViewController {
         
     }
     
-    func moveLabel() {
+    func moveLabel(label: UILabel, text: String, offset: CGPoint) {
         //TODO: Animate a label's translation property
+        
+        //Create and setup temp label
+        let tempLabel = duplicateLabel(label: label)
+        tempLabel.text = text
+        tempLabel.transform = CGAffineTransform(translationX: offset.x, y: offset.y)
+        tempLabel.alpha = 0.0
+        view.addSubview(tempLabel)
+        
+        //Fade out and transtale real label
+        UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseIn, animations: {
+            label.transform = CGAffineTransform(translationX: offset.x, y: offset.y)
+            label.alpha = 0.0
+        }, completion: nil)
+        
+        //Fade in and translate temp label
+        UIView.animate(withDuration: 0.25, delay: 0.2, options: .curveEaseIn, animations: {
+            tempLabel.transform = .identity
+            tempLabel.alpha = 1.0
+        }) {_ in
+            //Update real label and remove temp label
+            label.text = text
+            label.alpha = 1.0
+            label.transform = .identity
+            tempLabel.removeFromSuperview()
+        }
+        
+        
     }
     
     func cubeTransition() {
@@ -100,8 +127,14 @@ class ViewController: UIViewController {
             fade(toImage: UIImage(named: data.weatherImageName)!,
                  showEffects: data.showWeatherEffects)
             
+            // pass animating properties here to change label
+            let offset = CGPoint(x: -80.0, y: 0.0)
+            moveLabel(label: arrivingTo, text: data.arrivingTo, offset: offset)
         } else {
             bgImageView.image = UIImage(named: data.weatherImageName)
+            snowView.isHidden = !data.showWeatherEffects
+            departingFrom.text = data.departingFrom
+            arrivingTo.text = data.arrivingTo
         }
         
         // schedule next flight
